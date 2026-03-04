@@ -11,7 +11,7 @@
 2.  **Manager-Delegator Model:** Use the MCP **Sampling API** for complex analysis (summarization/review) and **Progress Notifications** for slow Git operations.
 3.  **Namespace Organization:** Enforce `personal/{user-name}/` and `shared/{space-name}/` path conventions.
 4.  **Index-Driven Navigation:** Use `INDEX.md` files at the root and folder levels for semantic discovery.
-5.  **State Protection:** The local `.mcp-state/` folder must ALWAYS be in the `.gitignore`.
+5.  **State Isolation:** All local server state and managed data repositories must be isolated within `~/.nexus-mcp/` to prevent leakage into the server's source repository or the managed remotes.
 
 ## Implementation Status
 *   **Research:** Completed (Found in `docs/research/`)

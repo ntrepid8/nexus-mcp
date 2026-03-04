@@ -34,7 +34,7 @@ This document outlines the technical and architectural gaps identified during th
 ## 5. Mapping Local State to Remote PRs (Metadata-Mapping & Compaction)
 *   **The Gap:** The MCP server needs a reliable way to map local branches and files to active GitHub Pull Request IDs.
 *   **Discussion Notes & Strategy:**
-    *   **Local State Cache:** The server will maintain a hidden `.mcp-state/` directory containing a `pr-cache.json` that maps local branch names to GitHub PR IDs and statuses.
+    *   **Local State Cache:** The server will maintain a `~/.nexus-mcp/state/` directory containing a `pr-cache.json` that maps local branch names to GitHub PR IDs and statuses.
     *   **Contextual Metadata:** Tools like `read_document` will return metadata headers (e.g., `X-MCP-PR-ID`) so agents are immediately aware of the PR context for the file they are reading.
     *   **LRU Compaction:** To prevent metadata bloat, the server will implement a **Least Recently Used (LRU)** compaction strategy. Metadata for closed PRs or deleted branches will be purged or moved to a compressed `history.log` after a configurable TTL (e.g., 30 days).
     *   **Maintenance Task:** A background maintenance task will periodically verify local branch existence and prune stale metadata to ensure performant lookups.

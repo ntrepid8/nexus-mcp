@@ -4,15 +4,14 @@
 **Nexus MCP** is a local Node.js-based Model Context Protocol (MCP) server specifically designed to organize, share, and persist markdown documents (and simple databases) across multiple AI agents (e.g., `gemini-cli`, `claude-code`) and multiple human users. The server uses a Git repository (hosted on GitHub) as its persistent storage backend, acting as a central "nexus" for agentic coordination and shared knowledge.
 
 *   **Repository:** `https://github.com/ntrepid8/nexus-mcp`
-*   **Local Project Path:** `/mnt/workspace/github.com/ntrepid8/nexus-mcp`
 
 ## 2. Core Architecture
 *   **Runtime:** Node.js (TypeScript) using the official `@modelcontextprotocol/sdk`.
 *   **Protocol:** Exposes resources (documents/databases) and tools (read, write, search, create) via MCP.
-*   **Storage Backend:** Local filesystem acting as a working directory, strictly synchronized with a configured remote GitHub repository (separate from the server source repo).
+*   **Storage Backend:** Managed local directory (defaulting to `~/.nexus-mcp/data/`) acting as a working directory, strictly synchronized with a configured remote GitHub repository.
 *   **Git Integration:** Automated commit, push, and pull operations to ensure state is persisted and shared without manual user intervention.
 *   **Async Management:** **Manager-Delegator Model** using the MCP **Sampling API** to delegate complex tasks (like summarization) back to the LLM as sub-agents, and **Progress Notifications** for long-running operations.
-*   **State Tracking:** A hidden local `.mcp-state/` folder within the repository to store **branch-to-PR metadata**, recommendation history, and a **Least Recently Used (LRU)** compaction strategy to prune stale data. **Note: This directory MUST be added to the `.gitignore` to prevent local metadata from leaking to the remote.**
+*   **State Tracking:** A hidden local directory (`~/.nexus-mcp/state/`) to store **branch-to-PR metadata**, recommendation history, and a **Least Recently Used (LRU)** compaction strategy to prune stale data. Keeping this outside of the managed repository prevents local metadata from leaking to the remote.
 
 ## 3. Key Features
 
@@ -74,7 +73,7 @@ The backing GitHub repository is structured into distinct namespaces to manage a
 4.  **Phase 4: Database Integration:** Implement the simple database layer (JSON or SQLite) and expose CRUD tools for agents.
 5.  **Phase 5: Conflict Resolution:** Implement a **"Rebase-and-Push"** workflow. If a push fails, the server attempts a local rebase. If a hard conflict occurs, provide a tool for the agent to notify the human for manual resolution.
 6.  **Phase 6: Async Manager-Delegator:** Implement the **Sampling API** for complex sub-agent tasks and **Progress Notifications** for all asynchronous operations.
-7.  **Phase 7: Metadata Tracking & Compaction:** Implement the hidden `.mcp-state/` folder with **Branch-to-PR mapping** and an **LRU pruning** maintenance task. Ensure `.mcp-state/` is added to the repository's `.gitignore`.
+7.  **Phase 7: Metadata Tracking & Compaction:** Implement the `~/.nexus-mcp/state/` directory with **Branch-to-PR mapping** and an **LRU pruning** maintenance task. Ensure this metadata is kept separate from the data repositories.
 
 ## 6. Monetization & Tiering
 *   **Free Tier:**
