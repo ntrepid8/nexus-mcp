@@ -11,7 +11,7 @@ import {
  * Nexus MCP Server
  * Initial scaffolding with a simple ping/version tool.
  */
-class NexusServer {
+export class NexusServer {
   private server: Server;
 
   constructor() {
@@ -81,15 +81,17 @@ class NexusServer {
     });
   }
 
-  async run() {
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
-    console.error("Nexus MCP server running on stdio");
+  async run(transport?: StdioServerTransport) {
+    const serverTransport = transport || new StdioServerTransport();
+    await this.server.connect(serverTransport);
+    console.error("Nexus MCP server running");
   }
 }
 
-const server = new NexusServer();
-server.run().catch((error) => {
-  console.error("Fatal error running server:", error);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const server = new NexusServer();
+  server.run().catch((error) => {
+    console.error("Fatal error running server:", error);
+    process.exit(1);
+  });
+}
